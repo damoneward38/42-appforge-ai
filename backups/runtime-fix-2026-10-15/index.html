@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AppForge AI — App Generator</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#0b0e18;color:#e9efff;min-height:100vh}
+header{background:#10142a;border-bottom:1px solid #1e2450;padding:16px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:5}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#6d28d9,#f43f5e);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 0 20px #6d28d966}
+h1{font-size:19px;margin:0}h1 small{color:#8b93a7;font-size:10px;display:block;letter-spacing:2px}
+.badge{margin-left:auto;font-size:11px;color:#a5b4fc;border:1px solid #3b3f8b;border-radius:20px;padding:5px 14px}
+.wrap{max-width:1180px;margin:0 auto;padding:24px;display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:#0f1326;border:1px solid #1e2450;border-radius:13px;padding:20px}
+.card h2{margin:0 0 14px;font-size:12px;text-transform:uppercase;letter-spacing:2px;color:#8b93a7}
+label{display:block;font-size:11px;color:#8b93a7;text-transform:uppercase;letter-spacing:.5px;margin-top:12px}
+input,select,textarea{width:100%;background:#0a0d1b;border:1px solid #222a52;border-radius:8px;color:#e9efff;padding:9px 12px;font-size:13px;margin-top:4px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#8b5cf6}
+textarea{resize:vertical;min-height:64px}
+.checkgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.chk{display:flex;gap:8px;align-items:center;font-size:12px;color:#cdd6f5;cursor:pointer}
+.chk input{width:auto;accent-color:#8b5cf6;margin:0}
+button{background:#1b2145;border:1px solid #2a3270;color:#e9efff;font-weight:700;border-radius:8px;padding:9px 15px;cursor:pointer;font-size:13px;transition:.12s}
+button:hover{background:#242c66;border-color:#8b5cf6}
+button.go{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:#8b5cf6;color:#fff;width:100%;margin-top:16px;font-size:14px;padding:11px}
+button.go:hover{filter:brightness(1.15)}
+.color-row{display:flex;gap:8px;align-items:center;margin-top:6px}
+.color-row input[type=color]{width:46px;height:34px;padding:2px;background:#0a0d1b;border:1px solid #222a52;border-radius:8px;cursor:pointer;margin:0}
+.color-row span{font-size:12px;color:#8b93a7;font-family:ui-monospace,monospace}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{background:#141735;border:1px solid #1e2450;color:#8b93a7;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px}
+.tab.on{background:#242c66;color:#fff;border-color:#8b5cf6}
+.preview{margin-top:16px}
+.pv-dev{width:240px;margin:0 auto;border-radius:18px;border:1px solid #333;overflow:hidden;background:#111;box-shadow:0 18px 46px #0008}
+.pv-bar{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#181818;font-size:11px;color:#eee}
+.pv-bar span{width:7px;height:7px;border-radius:50%;background:#ff5f57}
+.pv-bar span:nth-child(2){background:#febc2e}.pv-bar span:nth-child(3){background:#28c840}
+.pv-title{margin:0 auto;font-size:10px;color:#aaa}
+.pv-body{height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center;color:#fff}
+.pv-body .blk{font-size:40px}
+.pv-body .nm{font-weight:800;font-size:15px}
+.pv-body .dc{font-size:11px;opacity:.8;line-height:1.5}
+.pv-body .act{padding:7px 16px;border-radius:20px;font-size:11px;font-weight:700}
+.pv-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:6px}
+.pv-grid div{background:#ffffff22;border-radius:10px;padding:10px;font-size:10px;text-align:center}
+pre.code{background:#0a0d1b;border:1px solid #1e2450;border-radius:10px;padding:16px;font-size:11.5px;line-height:1.6;color:#cdd6f5;overflow:auto;max-height:440px;white-space:pre-wrap;word-break:break-word}
+.copy{position:sticky;top:352px;float:right;background:#242c66;color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;margin:-2px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#242c66;color:#fff;padding:9px 20px;border-radius:24px;font-size:12px;opacity:0;transition:.3s;z-index:99;pointer-events:none}
+.toast.on{opacity:1}
+.empty{color:#5a6280;text-align:center;padding:40px;font-size:13px;border:1px dashed #1e2450;border-radius:10px}
+</style></head>
+<body>
+<header><div class="logo">AF</div><h1>APPFORGE AI<small>GENERATOR</small></h1>
+<span class="badge">v1.3 · studio</span></header>
+<div class="wrap">
+<div class="card">
+<h2>App Blueprint</h2>
+<label>App Name</label><input id="appName" value="TaskFlow">
+<label>Purpose</label><textarea id="purpose" placeholder="e.g. A kanban board for the kitchen team…">A light kanban board for the kitchen team</textarea>
+<label>Category</label>
+<select id="cat"><option>Productivity</option><option>Social</option><option>Finance</option><option>Health</option><option>Creative</option><option>Education</option><option>Media</option><option>Utility</option></select>
+<label>Accent Color</label>
+<div class="color-row"><input type="color" id="accent" value="#8b5cf6"><span id="accentHex">#8b5cf6</span></div>
+<label>Features</label>
+<div class="checkgrid" id="featGrid">
+<div class="chk"><input type="checkbox" data-f="notifications" checked>Notifications</div>
+<div class="chk"><input type="checkbox" data-f="analytics" checked>Analytics</div>
+<div class="chk"><input type="checkbox" data-f="sync">Cloud sync</div>
+<div class="chk"><input type="checkbox" data-f="share">Share</div>
+<div class="chk"><input type="checkbox" data-f="darkmode" checked>Dark mode</div>
+<div class="chk"><input type="checkbox" data-f="onboarding">Onboarding</div>
+</div>
+<button class="go" id="genBtn">◇ Generate App</button>
+</div>
+
+<div class="card">
+<div class="tabs">
+<button class="tab on" data-t="preview">Live Preview</button>
+<button class="tab" data-t="code">Generated Code</button>
+</div>
+<div id="preview" class="preview"><div class="empty">Fill the blueprint and press Generate.</div></div>
+<div id="code" style="display:none"><div class="empty">Generated code will appear here.</div></div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200);}
+let feat={notifications:true,analytics:true,sync:false,share:false,darkmode:true,onboarding:false};
+$('featGrid').addEventListener('change',e=>{feat[e.target.dataset.f]=e.target.checked;});
+$('accent').addEventListener('input',()=>{const h=$('accent').value;$('accentHex').textContent=h;});
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+  $('preview').style.display=t.dataset.t==='preview'?'':'none';
+  $('code').style.display=t.dataset.t==='code'?'':'none';
+});
+
+function genCode(name,purpose,cat,accent,features){
+  const f=features;
+  const fts=Object.entries(f).filter(([k,v])=>v).map(([k])=>k);
+  const featList=fts.map(ft=>`  <div class="ft" style="border:1px solid ${accent}44;color:${accent}">${ft}</div>`).join('\n');
+  const css=`:root{--accent:${accent}}`;
+  return `<!-- ${name} — generated by AppForge AI -->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(name)}</title>
+<style>
+${css}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;
+background:#0b0e18;color:${name&&cat==='dark'?'#fff':'#e9efff'};min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px}
+h1{font-size:26px}h1 span{color:var(--accent)}.card{background:#12162a;
+border:1px solid #1e2450;border-radius:14px;padding:20px}
+button{background:var(--accent);border:none;color:#fff;font-weight:700;
+padding:10px 16px;border-radius:9px;cursor:pointer}
+.ft{border-radius:9px;padding:10px;font-size:12px;text-transform:capitalize}
+</style></head><body><div class="wrap">
+<h1><span>${esc(name)}</span></h1>
+<p style="color:#8b93a7">${esc(purpose)} · ${esc(cat)}</p>
+<div class="card" style="display:grid;gap:8px">${featList}
+<button>Get started</button></div>
+</div></body></html>`;
+}
+
+function renderPreview(name,purpose,cat,accent,f){
+  const fts=Object.entries(f).filter(([,v])=>v).map(([k])=>k);
+  $('preview').innerHTML=`<div class="pv-dev">
+<div class="pv-bar"><span></span><span></span><span></span><div class="pv-title">${esc(name)}</div></div>
+<div class="pv-body" style="background:linear-gradient(160deg,#12162a,#0a0d1b)">
+<div class="blk">◇</div><div class="nm">${esc(name)}</div>
+<div class="dc">${esc(purpose)}</div>
+<div class="act" style="background:${accent}">Get started</div>
+<div class="pv-grid">${fts.map(k=>`<div style="border:1px solid ${accent}44;color:${accent}">${esc(k)}</div>`).join('')}</div>
+</div></div>`;
+  $('preview').style.display='';$('code').style.display='none';
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.t==='preview'));
+  $('code').innerHTML=`<pre class="code" id="codePre"></pre>`;
+  $('codePre').textContent=genCode(name,purpose,cat,accent,f);
+}
+
+$('genBtn').onclick=()=>{
+  const name=$('appName').value.trim();const purpose=$('purpose').value.trim();
+  if(!name){toast('Give your app a name first.');return;}
+  const cat=$('cat').value;const accent=$('accent').value;
+  renderPreview(name,purpose,purpose?purpose:cat,accent,{...feat});
+  toast('◇ App generated');
+};
+$('code').addEventListener('click',e=>{
+  const pre=e.target.closest('pre');
+  if(pre){navigator.clipboard.writeText(pre.textContent).then(()=>toast('Code copied'));}
+});
+</script>
+</body></html>
